@@ -1,0 +1,23 @@
+[package]
+name = "docscript-editor"
+description = "GPUI editor, live preview and PDF/HTML export for DocScript"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "docscript"
+path = "src/main.rs"
+
+[dependencies]
+docscript.workspace = true
+gpui = { package = "gpui-pre", version = "=0.3.9" }
+gpui-kit = "0.8"
+printpdf = { version = "0.12", default-features = false, features = ["jpeg", "png"] }
+rfd = { version = "0.17", default-features = false }
+rustybuzz = "0.20"
+unicode-linebreak = "0.1"
+
+
+[dev-dependencies]
+image = { version = "0.25", default-features = false, features = ["png"] }

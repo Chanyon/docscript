@@ -1,0 +1,137 @@
+let theme = {
+  text: { font: "Microsoft YaHei", size: 15, leading: 1.75, color: "#24292f" },
+  h1: { size: 30, weight: 700, color: "#111827" },
+  h2: { size: 22, weight: 700 }
+}
+
+// 作用域样式：作用于后续内容；带块时只在该块内生效
+@set text(font: "Microsoft YaHei", size: 15, color: #24292f)
+@set heading(level: 1, size: 30, color: #111827)
+@set h2.style(@style({
+  size: 22;
+  color: #111827;
+  margin_before: 24;
+}))
+@set h2.accent(@style({
+  color: #b45309;
+  margin_before: 32;
+}))
+@set cell.header(background: "#f3f4f6", weight: 700)
+@set page(margin: 2cm)
+
+// 自定义语义元素
+@define note(body) {
+  quote { {body} }
+}
+@set note(background: #f3f4f6, indent: 16, color: #374151)
+
+// 顶层 let 是全局自由变量，函数与文本插值都能访问
+let author = "张三"
+let topics = ["自由变量", "文本插值", "全局作用域"]
+
+let white = {
+  text: { font: "Songti SC", size: 14, leading: 1.6 },
+  heading1: { size: 28, weight: 700 },
+}
+
+fn byline() {
+  p { 作者：{author} }
+}
+
+// fn 定义的函数也可以像自定义元素一样用 @set 设置容器样式
+@set byline(background: "#eef2ff", color: "#3730a3", indent: 14)
+
+// @name(...) 定义参考书目，正文中用 @name 引用
+@manual(text { DocScript 语言参考. 2026. })
+
+document(theme, title: "DocScript") {
+  h1 { DocScript }
+
+  p {
+    这是一个用代码写出来的文档，含 bold("粗体")、code("let x = 1") 和
+    link("链接", "https://example.com")。
+  }
+
+  h2 { 作用域 }
+
+  @set h2(size: 18, color: #b45309) {
+    h2 { 只在块内生效的标题 }
+    p { 离开这个块后，h2 会恢复原样式。 }
+  }
+
+  h2.accent { 类样式标题 }
+
+  p { 这个标题使用了 h2.accent 定义的类样式。 }
+
+  h2 { 自定义元素 }
+
+  list {
+    item { 第一项 }
+    item {
+      第二项
+      list {
+        item { 嵌套子项 A }
+        item { 嵌套子项 B }
+      }
+    }
+  }
+
+  note(text { 这是一段通过 @define 定义的 note 元素。 })
+
+  h2 { 图片与图注 }
+
+  p { 图片可以写在段落里，也可以通过 figure 添加描述： }
+
+  p {
+    段落内联图片：
+    image("glacier.png", width: 35%)
+  }
+
+  figure {
+    image("glacier.png", width: 70%)
+    text {
+      strong("Glaciers") form an important part
+      of the earth's climate system.
+    }
+  }
+
+  h2 { 表格 }
+
+  table {
+    row {
+      cell.header { p { 姓名 } }
+      cell.header { p { 角色 } }
+    }
+    row {
+      cell {
+        p { 张三 }
+        p { 第二段说明 }
+      }
+      cell { p { 作者 } }
+    }
+  }
+
+  p { 引用示例：本文参考 @manual。 }
+
+  h2 { 自由变量与文本插值 }
+
+  byline()
+
+  for topic in topics {
+    p { 主题：{topic}。 }
+  }
+
+  h2 { 对象与成员访问 }
+
+  p { white.text.font = {white.text.font} }
+
+  for name, value in white {
+    p("样式：", name, "，字号：", value.size)
+  }
+
+  for i in range(1, 4) {
+    p("第 ", i, " 段由循环生成。")
+  }
+}
+
+

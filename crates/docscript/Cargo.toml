@@ -1,0 +1,9 @@
+[package]
+name = "docscript"
+description = "A code-first typesetting language: parser, evaluator and document model"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+thiserror.workspace = true
